@@ -2,10 +2,12 @@ import json
 import os
 import urllib.request
 from urllib.error import URLError, HTTPError
+import boto3
 
 slack_bot_token = os.environ['MAPLE_BOT_TOKEN']
 dify_api_key = os.environ['MAPLE_DIFY_API_KEY']
 bot_user_id = os.environ['MAPLE_BOT_USER_ID']
+instance_id = os.environ['INSTANCE_ID']
 
 def lambda_handler(event, context):
     result = extract_event_details(event)
@@ -38,7 +40,9 @@ def extract_event_details(event):
     return result
 
 def post_chat_message_to_dify(api_key, query, user_id, conversation_id=""):
-    url = 'https://api.dify.ai/v1/chat-messages'
+    public_ip = get_instance_public_ip(instance_id)
+    url = print(f'{public_ip}/v1/workflows/run')
+
     headers = {
         'Authorization': f'Bearer {api_key}',
         'Content-Type': 'application/json',
@@ -94,3 +98,16 @@ def post_message_to_thread_to_slack(api_key, channel, text, thread_ts):
         print(e.read().decode())  # サーバーからのエラーメッセージを表示
     except URLError as e:
         print(f'URLError: {e.reason}')
+
+def get_instance_public_ip(instance_id):
+    ec2 = boto3.client('ec2')
+
+    # インスタンスの詳細情報を取得
+    response = ec2.describe_instances(InstanceIds=[instance_id])
+
+    # インスタンスの情報からパブリックIPアドレスを取得
+    try:
+        public_ip = response['Reservations'][0]['Instances'][0]['PublicIpAddress']
+        return public_ip
+    except KeyError:
+        return "Public IP Address not available or instance does not exist."
