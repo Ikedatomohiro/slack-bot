@@ -17,3 +17,18 @@ resource "aws_lambda_permission" "allow_cloudwatch" {
   principal     = "events.amazonaws.com"
   source_arn    = aws_cloudwatch_event_rule.stop_ec2_rule.arn
 }
+
+resource "aws_cloudwatch_log_group" "stop_ec2_lambda_log_group" {
+  name              = "/aws/lambda/stop_ec2"
+  retention_in_days = var.cloudwatch_log_retention
+}
+
+resource "aws_cloudwatch_log_group" "rag_sample_ikeda_lambda_log_group" {
+  name              = "/aws/lambda/rag-sample-ikeda"
+  retention_in_days = var.cloudwatch_log_retention
+}
+
+resource "aws_cloudwatch_log_group" "pass_to_sqs_lambda_log_group" {
+  name              = "/aws/lambda/pass_to_sqs_lambda"
+  retention_in_days = var.cloudwatch_log_retention
+}
