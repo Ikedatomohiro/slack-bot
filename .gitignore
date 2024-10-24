@@ -1,0 +1,37 @@
+.env
+
+# Terraform state files
+terraform.tfstate
+terraform.tfstate.backup
+*.tfstate
+*.tfstate.backup
+
+# Terraform variables files
+*.tfvars
+*.tfvars.json
+
+# Crash log files
+crash.log
+
+# .terraform directory
+.terraform/
+.terraform.lock.hcl
+
+# Override files (not included in version control)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Generated files (like plan files)
+terraform.plan
+*.tfplan
+
+# Sensitive files
+secret.tfvars
+
+slack/output_files/*
+
+python/*.zip
+*.pem
+
