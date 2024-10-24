@@ -3,20 +3,20 @@ import os
 import urllib.request
 from urllib.error import URLError, HTTPError
 
-slack_bot_token = os.environ["SLACK_BOT_TOKEN"]
-dify_api_key = os.environ["DIFY_API_KEY"]
-bot_user_id = os.environ["BOT_USER_ID"]
+slack_bot_token = os.environ['MAPLE_BOT_TOKEN']
+dify_api_key = os.environ['MAPLE_DIFY_API_KEY']
+bot_user_id = os.environ['MAPLE_BOT_USER_ID']
 
 def lambda_handler(event, context):
     result = extract_event_details(event)
-    clean_text = result["text"].replace(f"<@{bot_user_id}>", "").strip()
+    clean_text = result['text'].replace(f"<@{bot_user_id}>", '').strip()
 
     # Dify APIを使用して応答を取得
-    dify_response = post_chat_message_to_dify(dify_api_key, clean_text, result["user_id"])
-    answer = dify_response["answer"]
+    dify_response = post_chat_message_to_dify(dify_api_key, clean_text, result['user_id'])
+    answer = dify_response['answer']
 
     # Slackのスレッドに応答を投稿
-    slack_response = post_message_to_thread_to_slack(slack_bot_token, result["channel"], answer, result["thread_ts"])
+    slack_response = post_message_to_thread_to_slack(slack_bot_token, result['channel'], answer, result["thread_ts"])
 
     return {
         'statusCode': 200
@@ -27,10 +27,10 @@ def extract_event_details(event):
     event_data = body.get('event', {})
 
     result = {
-        "channel": event_data.get('channel'),
-        "user_id": event_data.get('user'),
-        "text": event_data.get('text'),
-        "thread_ts": event_data.get('thread_ts', event_data.get('ts'))
+        'channel': event_data.get('channel'),
+        'user_id': event_data.get('user'),
+        'text': event_data.get('text'),
+        'thread_ts': event_data.get('thread_ts', event_data.get('ts'))
     }
 
     print(result)
@@ -45,11 +45,11 @@ def post_chat_message_to_dify(api_key, query, user_id, conversation_id=""):
         'User-Agent': ''
     }
     data = {
-        "inputs": {},
-        "query": query,
-        "response_mode": "blocking",
-        "user": user_id,
-        "conversation_id": conversation_id
+        'inputs': {},
+        'query': query,
+        'response_mode': 'blocking',
+        'user': user_id,
+        'conversation_id': conversation_id
     }
 
     request_data = json.dumps(data).encode('utf-8')
@@ -77,9 +77,9 @@ def post_message_to_thread_to_slack(api_key, channel, text, thread_ts):
         'Content-Type': 'application/json'
     }
     data = {
-        "channel": channel,
-        "text": text,
-        "thread_ts": thread_ts
+        'channel': channel,
+        'text': text,
+        'thread_ts': thread_ts
     }
 
     request_data = json.dumps(data).encode('utf-8')

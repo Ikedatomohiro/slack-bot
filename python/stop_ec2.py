@@ -1,7 +1,7 @@
 import os
 import boto3
 
-instance_id = os.environ["INSTANCE_ID"]
+instance_id = os.environ['INSTANCE_ID']
 
 def lambda_handler(event, context):
     public_ip = get_instance_public_ip(instance_id)

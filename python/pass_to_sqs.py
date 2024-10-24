@@ -8,13 +8,13 @@ def lambda_handler(event, context):
     body = json.loads(event['body'])
 
     # リクエストのタイプがURL検証（url_verification）の場合は、チャレンジ（Challenge）を返す
-    if body.get("type") == "url_verification":
+    if body.get('type') == 'url_verification':
         return {
-            "statusCode": 200,
-            "headers": {
-                "Content-Type": "text/plain"
+            'statusCode': 200,
+            'headers': {
+                'Content-Type': 'text/plain'
             },
-            "body": body["challenge"]
+            'body': body['challenge']
         }
 
     # SQSにメッセージを送信
@@ -24,13 +24,13 @@ def lambda_handler(event, context):
     )
 
     if response['ResponseMetadata']['HTTPStatusCode'] != 200:
-        print("Failed to send message to SQS")
+        print('Failed to send message to SQS')
         return {
             'statusCode': 500,
             'body': json.dumps({'message': 'Failed to send message to SQS'})
         }
 
-    print("Message sent to SQS")
+    print('Message sent to SQS')
     print(body)
     return {
         'statusCode': 200,

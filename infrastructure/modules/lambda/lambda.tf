@@ -70,7 +70,7 @@ resource "aws_lambda_event_source_mapping" "sqs_lambda" {
   enabled          = true
 }
 
-# EC2をストップするLambda
+# Dify用EC2をストップするLambda
 resource "aws_lambda_function" "stop_ec2" {
   function_name    = "stop_ec2"
   role             = aws_iam_role.lambda_execution_role.arn
