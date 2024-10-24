@@ -15,7 +15,8 @@ def lambda_handler(event, context):
 
     # Dify APIを使用して応答を取得
     dify_response = post_chat_message_to_dify(dify_api_key, clean_text, result['user_id'])
-    answer = dify_response['answer']
+    print(dify_response)
+    answer = dify_response['data']['outputs']['text']
 
     # Slackのスレッドに応答を投稿
     slack_response = post_message_to_thread_to_slack(slack_bot_token, result['channel'], answer, result["thread_ts"])
@@ -41,7 +42,7 @@ def extract_event_details(event):
 
 def post_chat_message_to_dify(api_key, query, user_id, conversation_id=""):
     public_ip = get_instance_public_ip(instance_id)
-    url = print(f'{public_ip}/v1/workflows/run')
+    url = f'http://{public_ip}/v1/workflows/run'
 
     headers = {
         'Authorization': f'Bearer {api_key}',
@@ -49,8 +50,9 @@ def post_chat_message_to_dify(api_key, query, user_id, conversation_id=""):
         'User-Agent': ''
     }
     data = {
-        'inputs': {},
-        'query': query,
+        'inputs': {
+            'query': query
+        },
         'response_mode': 'blocking',
         'user': user_id,
         'conversation_id': conversation_id
