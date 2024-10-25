@@ -44,14 +44,14 @@ func getMessages(sc *slack.Client, channelID string) error {
 		for _, m := range h.Messages {
 			ms, err := getConversations(sc, channelID, m.Timestamp)
 			if err != nil {
-				panic(err)
+				return err
 			}
 
 			time.Sleep(1 * time.Second)
 
 			err = writeMessages(f, ms, channelID)
 			if err != nil {
-				log.Fatal(err)
+				return err
 			}
 		}
 	}
