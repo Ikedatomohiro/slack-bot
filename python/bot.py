@@ -15,7 +15,6 @@ def lambda_handler(event, context):
 
     # Dify APIを使用して応答を取得
     dify_response = post_chat_message_to_dify(dify_api_key, clean_text, result['user_id'])
-    print(dify_response)
     answer = dify_response['data']['outputs']['text']
 
     # Slackのスレッドに応答を投稿
@@ -67,6 +66,7 @@ def post_chat_message_to_dify(api_key, query, user_id, conversation_id=""):
     try:
         with urllib.request.urlopen(request, timeout=10) as response:
             response_data = response.read()
+            print(response_data)
             return json.loads(response_data)
     except HTTPError as e:
         print(f'HTTPError: {e.code} - {e.reason}')

@@ -54,6 +54,7 @@ func getMessages(sc *slack.Client, channelID string) error {
 				return err
 			}
 		}
+		break
 	}
 
 	return nil
@@ -79,20 +80,32 @@ func getConversations(sc *slack.Client, channelID, ts string) ([]slack.Message, 
 }
 
 func writeMessages(f *os.File, ms []slack.Message, channelID string) error {
+	if len(ms) == 0 {
+		return nil
+	}
+
+	// timestamp(1725850177.150049)から「.」をリプレイス
+	ts := strings.Replace(ms[0].Timestamp, ".", "", -1)
+	d := []byte("SlackURL: " + "https://e-dash-hq.slack.com/archives/" + channelID + "/p" + ts)
+
+	_, err := f.Write(d)
+	if err != nil {
+		return err
+	}
+
 	for _, m := range ms {
-		// timestamp(1725850177.150049)から「.」をリプレイス
-		ts := strings.Replace(m.Timestamp, ".", "", -1)
-		d := []byte("SlackURL: " + "https://e-dash-hq.slack.com/archives/" + channelID + "/p" + ts + "\n")
+		// textから改行を削除
+		m.Text = strings.Replace(m.Text, "\n", "", -1)
 
-		_, err := f.Write(d)
+		_, err = f.Write([]byte(m.Text))
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
+	}
 
-		_, err = f.Write([]byte(m.Text + "\n"))
-		if err != nil {
-			log.Fatal(err)
-		}
+	_, err = f.Write([]byte("\n"))
+	if err != nil {
+		return err
 	}
 
 	return nil
