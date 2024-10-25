@@ -31,7 +31,9 @@ terraform.plan
 secret.tfvars
 
 slack/output_files/*
+slack/output.md
 
 python/*.zip
 *.pem
 
+__debug_*
