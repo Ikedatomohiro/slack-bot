@@ -36,7 +36,7 @@ resource "aws_lambda_function" "rag_sample_ikeda" {
   runtime          = "python3.12"
   filename         = data.archive_file.function_zip.output_path
   source_code_hash = filebase64sha256(data.archive_file.function_zip.output_path)
-  timeout          = 10
+  timeout          = 30
 
   environment {
     variables = var.lambda_envs
