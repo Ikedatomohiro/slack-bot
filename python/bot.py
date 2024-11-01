@@ -64,15 +64,18 @@ def post_chat_message_to_dify(api_key, query, user_id, conversation_id=""):
     request = urllib.request.Request(url, data=request_data, headers=headers, method='POST')
 
     try:
-        with urllib.request.urlopen(request, timeout=10) as response:
+        with urllib.request.urlopen(request, timeout=30) as response:
             response_data = response.read()
             print(response_data)
             return json.loads(response_data)
     except HTTPError as e:
         print(f'HTTPError: {e.code} - {e.reason}')
-        print(e.read().decode())  # サーバーからのエラーメッセージを表示
+        error_message = e.read().decode()
+        print(f'Error content: {error_message}')
     except URLError as e:
         print(f'URLError: {e.reason}')
+    except Exception as e:
+        print(f'Unexpected error: {e}')
 
 # Slackのスレッドにメッセージを投稿する関数
 def post_message_to_thread_to_slack(api_key, channel, text, thread_ts):
