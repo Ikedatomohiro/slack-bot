@@ -114,7 +114,7 @@ resource "aws_iam_policy" "lambda_dify_ec2_policy" {
         {
             Effect: "Allow",
             Action: "ec2:StopInstances",
-            Resource = var.ec2.dify_ikeda_arn
+            Resource = aws_instance.edash_rag.arn
         },
         {
             Effect: "Allow",

@@ -1,8 +1,8 @@
-# 移行するまでとっておく
-resource "aws_instance" "ec2_dify" {
-  ami             = "ami-0e2612a08262410c8"
-  instance_type   = "t2.medium"
-  key_name        = "test_ikeda"
+resource "aws_instance" "edash_rag" {
+  ami             = "ami-09006835f19e96fcb" # Amazon Linux 2023 AMI
+  instance_type   = "t4g.medium" # ARM instance type
+  key_name        = "edash_rag_key"
+  security_groups = [aws_security_group.edash_rag_sg.name]
 
   root_block_device {
     volume_size = 16
@@ -16,11 +16,11 @@ resource "aws_instance" "ec2_dify" {
   EOF
 
   tags = {
-    Name = "dify_ikeda"
+    Name = "edash-rag"
   }
 }
 
-resource "aws_security_group" "ec2_dify" {
+resource "aws_security_group" "edash_rag_sg" {
   name        = "edash_rag_security_group"
   description = "Allow HTTP and SSH inbound traffic"
 

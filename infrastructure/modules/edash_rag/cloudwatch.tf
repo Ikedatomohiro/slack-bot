@@ -23,8 +23,8 @@ resource "aws_cloudwatch_log_group" "stop_ec2_lambda_log_group" {
   retention_in_days = var.cloudwatch_log_retention
 }
 
-resource "aws_cloudwatch_log_group" "rag_sample_ikeda_lambda_log_group" {
-  name              = "/aws/lambda/rag-sample-ikeda"
+resource "aws_cloudwatch_log_group" "post_rag_response_to_slack_function_lambda_log_group" {
+  name              = "/aws/lambda/post-rag-response-to-slack-function"
   retention_in_days = var.cloudwatch_log_retention
 }
 

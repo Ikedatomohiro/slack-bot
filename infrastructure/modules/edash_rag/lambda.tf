@@ -25,12 +25,12 @@ resource "aws_lambda_permission" "apigw_lambda" {
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.pass_to_sqs_lambda.function_name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_apigatewayv2_api.ikeda_api.execution_arn}/*/*"
+  source_arn    = "${aws_apigatewayv2_api.edash_rag_api.execution_arn}/*/*"
 }
 
 # SQS から Lambda をトリガー
-resource "aws_lambda_function" "rag_sample_ikeda" {
-  function_name    = "rag-sample-ikeda"
+resource "aws_lambda_function" "post_rag_response_to_slack_function" {
+  function_name    = "post-rag-response-to-slack-function"
   role             = aws_iam_role.lambda_execution_role.arn
   handler          = "bot.lambda_handler"
   runtime          = "python3.12"
@@ -39,11 +39,11 @@ resource "aws_lambda_function" "rag_sample_ikeda" {
   timeout          = 30
 
   environment {
-    variables = var.lambda_envs
+    variables = var.edash_rag_envs
   }
 
   tags = {
-    Name = "rag-sample-ikeda"
+    Name = "post-rag-response-to-slack-function"
   }
 }
 
@@ -57,7 +57,7 @@ data "archive_file" "function_zip" {
 resource "aws_lambda_permission" "sqs_lambda_permission" {
   statement_id  = "AllowSQSTrigger"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.rag_sample_ikeda.function_name
+  function_name = aws_lambda_function.post_rag_response_to_slack_function.function_name
   principal     = "sqs.amazonaws.com"
   source_arn    = aws_sqs_queue.rag_queue.arn
 }
@@ -65,7 +65,7 @@ resource "aws_lambda_permission" "sqs_lambda_permission" {
 # SQS キューから Lambda をトリガー
 resource "aws_lambda_event_source_mapping" "sqs_lambda" {
   event_source_arn = aws_sqs_queue.rag_queue.arn
-  function_name    = aws_lambda_function.rag_sample_ikeda.arn
+  function_name    = aws_lambda_function.post_rag_response_to_slack_function.arn
   batch_size       = 10
   enabled          = true
 }
@@ -81,7 +81,7 @@ resource "aws_lambda_function" "stop_ec2" {
 
   environment {
     variables = {
-      INSTANCE_ID = var.lambda_envs.INSTANCE_ID
+      INSTANCE_ID = var.edash_rag_envs.INSTANCE_ID
     }
   }
 
