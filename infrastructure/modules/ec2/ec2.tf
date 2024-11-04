@@ -59,20 +59,3 @@ resource "aws_security_group" "dify_ikeda_sg" {
 output "dify_ikeda_arn" {
   value = aws_instance.ec2_dify.arn
 }
-
-# # EBSボリュームの作成
-# resource "aws_ebs_volume" "additional_volume" {
-#   availability_zone = "ap-northeast-1a"
-#   size              = 5
-#   type              = "gp3"
-#   tags = {
-#     Name = "additional_volume"
-#   }
-# }
-
-# # EBSボリュームをEC2にアタッチ
-# resource "aws_volume_attachment" "ebs_attachment" {
-#   device_name = "/dev/sdf"
-#   volume_id   = aws_ebs_volume.additional_volume.id
-#   instance_id = aws_instance.ec2_dify.id
-# }

@@ -2,6 +2,13 @@ provider "aws" {
   region = var.aws_region
 }
 
+variable "lambda_envs" {}
+variable "vpc_envs" {}
+
+module "ec2" {
+  source = "./modules/ec2"
+}
+
 module "lambda" {
   source                   = "./modules/lambda"
   lambda_envs              = var.lambda_envs
@@ -10,8 +17,7 @@ module "lambda" {
   cloudwatch_log_retention = 60
 }
 
-variable "lambda_envs" {}
-
-module "ec2" {
-  source = "./modules/ec2"
+module "vpc" {
+  source   = "./modules/vpc"
+  vpc_envs = var.vpc_envs
 }
