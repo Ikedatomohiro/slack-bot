@@ -47,6 +47,9 @@ resource "aws_internet_gateway" "edash_rag_igw" {
 }
 
 resource "aws_subnet" "edash_rag_public_subnet" {
+  tags = {
+    Name = "edash-rag-public-subnet"
+  }
   vpc_id                  = aws_vpc.edash_rag_vpc.id
   cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
@@ -72,11 +75,17 @@ resource "aws_eip" "nat_eip" {
 }
 
 resource "aws_nat_gateway" "nat_gw" {
+  tags = {
+    Name = "edash-rag-nat-gw"
+  }
   allocation_id = aws_eip.nat_eip.id
   subnet_id     = aws_subnet.edash_rag_public_subnet.id
 }
 
 resource "aws_subnet" "edash_rag_private_subnet" {
+  tags = {
+    Name = "edash-rag-private-subnet"
+  }
   vpc_id            = aws_vpc.edash_rag_vpc.id
   cidr_block        = "10.0.2.0/24"
   availability_zone = var.availability_zone
