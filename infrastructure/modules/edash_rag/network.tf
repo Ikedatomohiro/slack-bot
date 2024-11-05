@@ -1,3 +1,47 @@
+resource "aws_vpc" "edash_rag_vpc" {
+  tags = {
+    Name = "edash-rag-vpc"
+  }
+  cidr_block = var.edash_rag_envs["EDASH_RAG_VPC_CIDR_BLOCK"]
+}
+
+resource "aws_security_group" "edash_rag_sg" {
+  name        = "edash-rag-security-group"
+  description = "Allow HTTP and SSH inbound traffic"
+  vpc_id      = aws_vpc.edash_rag_vpc.id
+
+  ingress {
+    description = "Allow SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Allow HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Allow HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "aws_internet_gateway" "edash_rag_igw" {
   vpc_id = aws_vpc.edash_rag_vpc.id
 }

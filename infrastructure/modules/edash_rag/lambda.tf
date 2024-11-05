@@ -13,10 +13,10 @@ resource "aws_lambda_function" "pass_to_sqs_lambda" {
     }
   }
 
-  # vpc_config {
-  #   subnet_ids         = [aws_subnet.edash_rag_private_subnet.id]
-  #   security_group_ids = [aws_security_group.edash_rag_sg.id]
-  # }
+  vpc_config {
+    subnet_ids         = [aws_subnet.edash_rag_private_subnet.id]
+    security_group_ids = [aws_security_group.edash_rag_sg.id]
+  }
 }
 
 data "archive_file" "function_pass_to_sqs_zip" {
