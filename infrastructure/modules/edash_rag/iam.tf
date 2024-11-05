@@ -35,7 +35,7 @@ resource "aws_iam_role_policy" "sqs_access_policy" {
 
 # Lambda実行ロール
 resource "aws_iam_role" "lambda_execution_role" {
-  name = "lambda_execution_role"
+  name = "lambda-execution-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -81,7 +81,7 @@ resource "aws_iam_role_policy_attachment" "lambda_policy_attachment" {
 }
 
 resource "aws_iam_role" "lambda_ec2_stop_role" {
-  name = "lambda_ec2_stop_role"
+  name = "lambda-ec2-stop-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -105,8 +105,8 @@ resource "aws_iam_role_policy_attachment" "ec2_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
 }
 
-resource "aws_iam_policy" "lambda_dify_ec2_policy" {
-  name = "lambda_dify_ec2_policy"
+resource "aws_iam_policy" "edash_rag_ec2_policy" {
+  name = "edash-rag-ec2-policy"
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -126,6 +126,6 @@ resource "aws_iam_policy" "lambda_dify_ec2_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_ec2_describe_attachment" {
-  role       = "lambda_execution_role"
-  policy_arn = aws_iam_policy.lambda_dify_ec2_policy.arn
+  role       = "lambda-execution-role"
+  policy_arn = aws_iam_policy.edash_rag_ec2_policy.arn
 }

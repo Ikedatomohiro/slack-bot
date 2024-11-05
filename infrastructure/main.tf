@@ -9,4 +9,5 @@ module "edash_rag" {
   edash_rag_envs           = var.edash_rag_envs
   region                   = var.aws_region
   cloudwatch_log_retention = 60
+  availability_zone        = "ap-northeast-1a"
 }
